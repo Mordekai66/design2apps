@@ -42,3 +42,22 @@ This tool is useful for:
 ## Future Development Plans
 - Support for other GUI libraries such as PyQt and Kivy.
 - Improved handling of complex layouts.
+
+---
+
+# Repository Structure
+
+```plaintext
+figma2tkinter
+│── src         # Source code directory
+│   ├── main.py                            # Entry point for the application
+│   ├── to_code.py                         # Logic to convert Figma design to Tkinter code
+│   ├── collect_parse_json_file.py         # Fetches JSON data from Figma
+│
+│──  examples             # Sample designs and generated outputs
+│   ├──  jsom.json        # Example Figma JSON file
+│   ├──  output.py        # Generated Tkinter code
+│
+│──  requirements.txt      # Dependencies list
+│──  LICENSE               # License information (e.g., MIT, GPL)
+```
