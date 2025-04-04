@@ -1,2 +1,4 @@
 requests
 Pillow
+kivy
+pyqt5
