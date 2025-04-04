@@ -53,7 +53,7 @@ This tool is useful for:
 # Repository Structure
 
 ```plaintext
-figma2gui
+figma2pythonGUIs
 │── src         # Source code directory
 │   ├── main.py                            # Entry point for the application
 │   ├── collect_parse_json_file.py         # Fetches JSON data from Figma
