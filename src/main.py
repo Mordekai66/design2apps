@@ -8,7 +8,21 @@ from to_kivy import transform_json_to_kivy
 from to_pyqt5 import transform_json_to_pyqt5
 from tkinter import filedialog, messagebox
 import threading
+# only shapes
+# 7|W|H|a|k|Z|a|G|3|8|u|6|b|r2Bw392Lv
+# fig|d|_|w|-|i|I|L|L|h|M|E|OqtfXI0OrzN9nVim7v5wDD5HXzI7--I
 
+# general test
+# G6hQ7hn1nsJYyr|||NqFCek39
+# figd_w-iIL||||LhMEOqtfXI0OrzN9nVim7v5wDD5HXzI7--I
+
+# calc test
+# HEWUrIrqS||||9Or3L8OHmWIqj
+# figd_w-iIL|||||LhMEOqtfXI0OrzN9nVim7v5wDD5HXzI7--I
+
+# Compare login test with real world wxample
+# VhBqxbkrj|||||SDMKXUUC70MLX
+# figd_w-iIL||||||||||LhMEOqtfXI0OrzN9nVim7v5wDD5HXzI7--I
 
 def select_file(event):
     folder_path = filedialog.askdirectory()
@@ -17,16 +31,14 @@ def select_file(event):
 
 
 def run_with_message(func, *args, message="Done!"):
-    try:
         func(*args)
         messagebox.showinfo("Success", message)
-    except Exception as e:
-        messagebox.showerror("Error", f"{message} failed: {e}")
 
 def call_data(event):
     token_access = entry_2.get().strip()
     file_id = entry_1.get().strip()
-    output_file_path = entry_3.get().strip()
+    output_file_path = os.path.dirname(entry_3.get().strip())
+    print(output_file_path)
 
     if output_file_path.startswith(("\"", "'")) and output_file_path.endswith(("\"", "'")):
         output_file_path = output_file_path[1:-1]
@@ -117,7 +129,7 @@ button_id = canvas.create_rectangle(370, 349, 400, 379, fill='#875d5d', outline=
 text_id = canvas.create_text(385, 364, text="📁", fill="black", font=("Arial", 12), anchor="center", tags="browse")
 
 
-button_id = canvas.create_oval(120, 399, 294, 451, fill='#c34e4e', outline="black", tags="button")
+button_id = canvas.create_oval(120, 399, 294, 451, fill="#c34e4e", outline="black", tags="button")
 
 
 text_id = canvas.create_text(207, 425, text="Submit", fill="black", font=("Arial", 12), anchor="center", tags="button")

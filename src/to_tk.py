@@ -177,12 +177,12 @@ def create_image_element(element, output_path, file_id_figma, token_access, widg
     img_data = requests.get(image_url).content
 
 
-    if not os.path.exists(f"{output_path}/build/image"):
-        os.mkdir(f"{output_path}/build/image")
+    if not os.path.exists(os.path.join(f"{os.path.dirname(output_path)}",'image')):
+        os.mkdir(os.path.join(f"{os.path.dirname(output_path)}",'image'))
 
     # Write image data in PNG file
-    image_path = f"{output_path}/build/image/{random.randint(1,200)}.png"
-
+    image_path = os.path.join(f"{os.path.dirname(output_path)}","image",f"{random.randint(1,200)}.png")
+    
     with open(image_path, "wb") as s:
         s.write(img_data)
     
@@ -353,10 +353,10 @@ def create_frame(element, widget, file_id_figma, token_access):
 
     tk_writer.write(f"""
 frame_{frame_id.replace(":","_")} = Canvas(window, width={width}, height={height}, bg='{bg_hex}', highlightthickness=0)
-{widget.replace(":","_")}.create_window({x} - {widget.replace(":","_")}.winfo_x(), {y} - {widget.replace(":","_")}.winfo_y(), anchor='nw', window=frame_{frame_id.replace(":","_")})
-""")
-    tk_writer.write(f"{widget.replace(":","_")}.update()")
-    tk_writer.write("\n\n")
+{widget.replace(":","_")}.create_window({x}, {y}, anchor='nw', window=frame_{frame_id.replace(":","_")})
+""", file_path)
+    tk_writer.write(f"{widget.replace(":","_")}.update()", file_path)
+    tk_writer.write("\n\n", file_path)
 
     for frame_element in element["children"]:
             if frame_element["type"] == "TEXT" or frame_element["name"].lower() == "text":
