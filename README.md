@@ -1,4 +1,12 @@
-# Convert Figma Designs to GUI Code (Tkinter, Kivy, PyQt5, Swing, C++)
+# Convert Figma Designs to GUI Code
+
+![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)
+![Figma](https://img.shields.io/badge/Figma-Input-F24E1E?logo=figma&logoColor=white)
+![Tkinter](https://img.shields.io/badge/Tkinter-Output-306998?logo=python&logoColor=white)
+![PyQt5](https://img.shields.io/badge/PyQt5-Output-41CD52?logo=qt&logoColor=white)
+![Kivy](https://img.shields.io/badge/Kivy-Output-1EB8F1?logo=kivy&logoColor=white)
+![Java Swing](https://img.shields.io/badge/Java_Swing-Output-007396?logo=java&logoColor=white)
+![C++ Qt](https://img.shields.io/badge/C%2B%2B_Qt-Output-FF6B35?logo=qt&logoColor=white)
 
 This project automatically converts Figma designs into GUI code for multiple frameworks including Tkinter, Kivy, PyQt5, Java Swing, and C++ with Qt, helping developers save time and effort when building graphical user interfaces.
 
