@@ -165,4 +165,3 @@ All files are saved under `{output_dir}/build/`:
 - Web-based version
 - Plugin system for community-contributed transformers
 - Batch processing for multiple designs
-```
