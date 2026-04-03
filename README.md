@@ -7,6 +7,7 @@
 ![Kivy](https://img.shields.io/badge/Kivy-Output-1EB8F1?logo=kivy&logoColor=white)
 ![Java Swing](https://img.shields.io/badge/Java_Swing-Output-007396?logo=java&logoColor=white)
 ![C++ Qt](https://img.shields.io/badge/C%2B%2B_Qt-Output-FF6B35?logo=qt&logoColor=white)
+![Views](https://visitor-badge.laobi.icu/badge?page_id=Mordekai66.design2apps)
 
 design2apps automatically converts Figma designs into GUI code for multiple frameworks — Tkinter, Kivy, PyQt5, Java Swing, and C++ with Qt — saving developers the time of writing repetitive UI code by hand.
 
