@@ -11,7 +11,6 @@ from pyqt5_transformer import transform_json_to_pyqt5
 from swing_transformer import transform_json_to_swing
 from cpp_transformer import transform_json_to_cpp
 
-
 current_mode = "figma"  # "figma" or "json"
 
 def toggle_mode():
@@ -120,7 +119,7 @@ def submit_data():
     file_id_figma = entry_1.get().strip() if current_mode == "figma" else "local_json"
     token_access = entry_2.get().strip() if current_mode == "figma" else "local_json"
 
-    threading.Thread(target=run_with_message, args=(transform_json_to_tk, data, output_file_path, file_id_figma, token_access), kwargs={"message": "Tk file created successfully!"}).start()
+    threading.Thread(target=run_with_message, args=(transform_json_to_tk, data, output_dir, file_id_figma, token_access), kwargs={"message": "Tk file created successfully!"}).start()
     threading.Thread(target=run_with_message, args=(transform_json_to_kivy, data, output_dir, file_id_figma, token_access), kwargs={"message": "Kivy file created successfully!"}).start()
     threading.Thread(target=run_with_message, args=(transform_json_to_pyqt5, data, output_dir, file_id_figma, token_access), kwargs={"message": "PyQt5 file created successfully!"}).start()
     threading.Thread(target=run_with_message, args=(transform_json_to_swing, data, output_dir, file_id_figma, token_access), kwargs={"message": "Swing file created successfully!"}).start()
@@ -164,6 +163,12 @@ def check_figma_access(token, file_id):
         return False
     if response.status_code == 404:
         messagebox.showerror("Error", "File not found")
+        return False
+    if response.status_code == 401:
+        messagebox.showerror("Error", "Unauthorized access - check your token")
+        return False
+    if response.status_code == 429:
+        messagebox.showerror("Error", "Rate limit exceeded - please try again later")
         return False
 
     messagebox.showerror("Error", f"Unexpected error: {response.status_code}")
