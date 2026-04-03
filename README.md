@@ -1,8 +1,3 @@
-الـ README والـ release notes هي ملفات markdown عادية — هكتبهم inline مباشرة.
-
-**README.md المحدث:**
-
-```markdown
 # design2apps — Convert Figma Designs to GUI Code
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)
