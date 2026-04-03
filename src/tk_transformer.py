@@ -22,10 +22,10 @@ def create_text(element, widget):
 
     if str(widget).startswith("frame_"):
         tk_writer.write("\n\n", file_path)
-        tk_writer.write(f"""{widget}.create_text({x} - {widget}.winfo_x(), {y} - {widget}.winfo_y(), anchor='{text_anchor_final}', text='{chars}', fill='{text_hex}', font=('{font_family}', {font_size * -1}))""", file_path)
+        tk_writer.write(f"""{widget.replace(":", "_")}.create_text({x} - {widget}.winfo_x(), {y} - {widget}.winfo_y(), anchor='{text_anchor_final}', text='{chars}', fill='{text_hex}', font=('{font_family}', {font_size * -1}))""", file_path)
         tk_writer.write("\n\n", file_path)
     else:
-        tk_writer.write(f'''{widget}.create_text({x},{y},anchor="{text_anchor_final}", text="{chars}", fill="{text_hex}", font=("{font_family}", {font_size * -1}))''', file_path)
+        tk_writer.write(f'''{widget.replace(":", "_")}.create_text({x},{y},anchor="{text_anchor_final}", text="{chars}", fill="{text_hex}", font=("{font_family}", {font_size * -1}))''', file_path)
         tk_writer.write("\n\n", file_path)
 
 def create_button(element, widget):
@@ -53,25 +53,25 @@ def create_button(element, widget):
         
     if button_shape["type"] == "RECTANGLE":  
         if str(widget).startswith("frame_"):
-            tk_writer.write(f"""{widget}.create_rectangle({x} - {widget}.winfo_x(), {y} - {widget}.winfo_y(), ({x} - {widget}.winfo_x()) + {width}, ({y} - {widget}.winfo_y()) + {height}, fill='{fill_color}', outline="black", tags="button")""", file_path)
+            tk_writer.write(f"""{widget.replace(":", "_")}.create_rectangle({x} - {widget}.winfo_x(), {y} - {widget}.winfo_y(), ({x} - {widget}.winfo_x()) + {width}, ({y} - {widget}.winfo_y()) + {height}, fill='{fill_color}', outline="black", tags="button")""", file_path)
             tk_writer.write("\n\n", file_path)
         else:
-            tk_writer.write(f"""{widget}.create_rectangle({x}, {y}, {x + width}, {y + height}, fill='{fill_color}', outline="black", tags="button")""", file_path)
+            tk_writer.write(f"""{widget.replace(":", "_")}.create_rectangle({x}, {y}, {x + width}, {y + height}, fill='{fill_color}', outline="black", tags="button")""", file_path)
             tk_writer.write("\n\n", file_path)
     elif button_shape["type"] == "ELLIPSE":
         if str(widget).startswith("frame_"):
-            tk_writer.write(f"""{widget}.create_oval({x} - {widget}.winfo_x() , {y} - {widget}.winfo_y(), ({x} - {widget}.winfo_x()) + {width}, ({y} - {widget}.winfo_y()) + {height}, fill='{fill_color}', outline="black", tags="button")""", file_path)
+            tk_writer.write(f"""{widget.replace(":", "_")}.create_oval({x} - {widget}.winfo_x() , {y} - {widget}.winfo_y(), ({x} - {widget}.winfo_x()) + {width}, ({y} - {widget}.winfo_y()) + {height}, fill='{fill_color}', outline="black", tags="button")""", file_path)
             tk_writer.write("\n\n", file_path)
         else:
-            tk_writer.write(f"""{widget}.create_oval({x}, {y}, {x + width}, {y + height}, fill='{fill_color}', outline="black", tags="button")""", file_path)
+            tk_writer.write(f"""{widget.replace(":", "_")}.create_oval({x}, {y}, {x + width}, {y + height}, fill='{fill_color}', outline="black", tags="button")""", file_path)
             tk_writer.write("\n\n", file_path)
 
     if button_text:
         if str(widget).startswith("frame_"):
-            tk_writer.write(f"""{widget}.create_text({x + width // 2} - {widget}.winfo_x(), {y + height // 2} - {widget}.winfo_y(), text="{button_text}", fill="black", font=("Arial", 12), anchor="center", tags="button")""", file_path)
+            tk_writer.write(f"""{widget.replace(":", "_")}.create_text({x + width // 2} - {widget}.winfo_x(), {y + height // 2} - {widget}.winfo_y(), text="{button_text}", fill="black", font=("Arial", 12), anchor="center", tags="button")""", file_path)
             tk_writer.write("\n\n", file_path)
         else:
-            tk_writer.write(f"""{widget}.create_text({x + width // 2}, {y + height // 2}, text="{button_text}", fill="black", font=("Arial", 12), anchor="center", tags="button")""", file_path)
+            tk_writer.write(f"""{widget.replace(":", "_")}.create_text({x + width // 2}, {y + height // 2}, text="{button_text}", fill="black", font=("Arial", 12), anchor="center", tags="button")""", file_path)
             tk_writer.write("\n\n", file_path)
 
 def create_entry(element, widget):
@@ -86,16 +86,16 @@ def create_entry(element, widget):
     text_anchor_y = alignment_map_y.get(element["constraints"].get("vertical"), "n")
     text_anchor_final = text_anchor_y + text_anchor_x
 
-    tk_writer.write(f"entry = Entry(window, bg='{text_hex}')", file_path)
+    tk_writer.write(f"entry_{element['id'].replace(":", "_")} = Entry(window, bg='{text_hex}')", file_path)
     tk_writer.write("\n", file_path)
-    tk_writer.write("entry.insert(0, 'Enter text here')", file_path)
+    tk_writer.write(f"entry_{element['id'].replace(":", "_")}.insert(0, 'Enter text here')", file_path)
     tk_writer.write("\n", file_path)
     
     if str(widget).startswith("frame_"):
-        tk_writer.write(f"""{widget}.create_window({x} - {widget}.winfo_x(),{y} - {widget}.winfo_y(), anchor='{text_anchor_final}', window=entry, width={width}, height={height})""", file_path)
+        tk_writer.write(f"""{widget.replace(":", "_")}.create_window({x} - {widget}.winfo_x(),{y} - {widget}.winfo_y(), anchor='{text_anchor_final}', window=entry_{element['id'].replace(":", "_")}, width={width}, height={height})""", file_path)
         tk_writer.write("\n\n", file_path)
     else:
-        tk_writer.write(f"""{widget}.create_window({x}, {y}, anchor='{text_anchor_final}', window=entry, width={width}, height={height})""", file_path)
+        tk_writer.write(f"""{widget.replace(":", "_")}.create_window({x}, {y}, anchor='{text_anchor_final}', window=entry_{element['id'].replace(":", "_")}, width={width}, height={height})""", file_path)
         tk_writer.write("\n\n", file_path)
 
 def create_image(element, output_path, file_id_figma, token_access, widget):
@@ -141,10 +141,10 @@ photo = ImageTk.PhotoImage(image)""", file_path)
     tk_writer.write("\n", file_path)
 
     if str(widget).startswith("frame_"):
-        tk_writer.write(f"""{widget}.create_image({x} - {widget}.winfo_x(), {y} - {widget}.winfo_y(), anchor='{text_anchor_final}', image=photo)""", file_path)
+        tk_writer.write(f"""{widget.replace(":", "_")}.create_image({x} - {widget}.winfo_x(), {y} - {widget}.winfo_y(), anchor='{text_anchor_final}', image=photo)""", file_path)
         tk_writer.write("\n\n", file_path)
     else:
-        tk_writer.write(f"""{widget}.create_image({x}, {y}, anchor='{text_anchor_final}', image=photo)""", file_path)
+        tk_writer.write(f"""{widget.replace(":", "_")}.create_image({x}, {y}, anchor='{text_anchor_final}', image=photo)""", file_path)
         tk_writer.write("\n\n", file_path)
 
 def create_rectangle(element, widget):
@@ -157,10 +157,10 @@ def create_rectangle(element, widget):
         fill_color = utils.rgb_to_hex(element["fills"][0].get("color", {"r": 0.85, "g": 0.85, "b": 0.85}))
 
     if str(widget).startswith("frame_"):
-        tk_writer.write(f"{widget}.create_rectangle({x} - {widget}.winfo_x(), {y} - {widget}.winfo_y(), ({x} - {widget}.winfo_x()) + {width}, ({y} - {widget}.winfo_y()) + {height}, fill='{fill_color}', outline='black')", file_path)
+        tk_writer.write(f"{widget.replace(":", "_")}.create_rectangle({x} - {widget}.winfo_x(), {y} - {widget}.winfo_y(), ({x} - {widget}.winfo_x()) + {width}, ({y} - {widget}.winfo_y()) + {height}, fill='{fill_color}', outline='black')", file_path)
         tk_writer.write("\n\n", file_path)
     else:
-        tk_writer.write(f"{widget}.create_rectangle({x}, {y}, {x + width}, {y + height}, fill='{fill_color}', outline='black')", file_path)
+        tk_writer.write(f"{widget.replace(":", "_")}.create_rectangle({x}, {y}, {x + width}, {y + height}, fill='{fill_color}', outline='black')", file_path)
         tk_writer.write("\n\n", file_path)
 
 def create_ellipse(element, widget):
@@ -173,10 +173,10 @@ def create_ellipse(element, widget):
             fill_color = utils.rgb_to_hex(element["fills"][0].get("color", {"r": 0.85, "g": 0.85, "b": 0.85}))
 
     if str(widget).startswith("frame_"):
-        tk_writer.write(f"{widget}.create_oval({x} - {widget}.winfo_x(), {y} - {widget}.winfo_y(), ({x} - {widget}.winfo_x()) + {width}, ({y} - {widget}.winfo_y()) + {height}, fill='{fill_color}', outline='black')", file_path)
+        tk_writer.write(f"{widget.replace(":", "_")}.create_oval({x} - {widget}.winfo_x(), {y} - {widget}.winfo_y(), ({x} - {widget}.winfo_x()) + {width}, ({y} - {widget}.winfo_y()) + {height}, fill='{fill_color}', outline='black')", file_path)
         tk_writer.write("\n\n", file_path)
     else:
-        tk_writer.write(f"{widget}.create_oval({x}, {y}, {x + width}, {y + height}, fill='{fill_color}', outline='black')", file_path)
+        tk_writer.write(f"{widget.replace(":", "_")}.create_oval({x}, {y}, {x + width}, {y + height}, fill='{fill_color}', outline='black')", file_path)
         tk_writer.write("\n\n", file_path)
 
 def create_arrow(element, widget):
@@ -212,10 +212,10 @@ def create_arrow(element, widget):
     arrow_position = detect_arrow_position(element)
 
     if str(widget).startswith("frame_"):
-        tk_writer.write(f"""{widget}.create_line({x} - {widget}.winfo_x(), {y} - {widget}.winfo_y(), ({x} - {widget}.winfo_x()) + {width}, ({y} - {widget}.winfo_y()) + {height}, fill='black', arrow='{arrow_position}', width=2)""", file_path)
+        tk_writer.write(f"""{widget.replace(":", "_")}.create_line({x} - {widget}.winfo_x(), {y} - {widget}.winfo_y(), ({x} - {widget}.winfo_x()) + {width}, ({y} - {widget}.winfo_y()) + {height}, fill='black', arrow='{arrow_position}', width=2)""", file_path)
         tk_writer.write("\n\n", file_path)
     else:
-        tk_writer.write(f"""{widget}.create_line({x}, {y}, {x + width}, {y + height}, fill='black', arrow='{arrow_position}', width=2)""", file_path)
+        tk_writer.write(f"""{widget.replace(":", "_")}.create_line({x}, {y}, {x + width}, {y + height}, fill='black', arrow='{arrow_position}', width=2)""", file_path)
         tk_writer.write("\n\n", file_path)
 
 def create_line(element, widget):
@@ -225,10 +225,10 @@ def create_line(element, widget):
     height = int(element["absoluteBoundingBox"]["height"])
 
     if str(widget).startswith("frame_"):
-        tk_writer.write(f"""{widget}.create_line({x} - {widget}.winfo_x(), {y} - {widget}.winfo_y(), ({x} - {widget}.winfo_x()) + {width}, ({y} - {widget}.winfo_y()) + {height}, fill='black', width=2)""", file_path)
+        tk_writer.write(f"""{widget.replace(":", "_")}.create_line({x} - {widget}.winfo_x(), {y} - {widget}.winfo_y(), ({x} - {widget}.winfo_x()) + {width}, ({y} - {widget}.winfo_y()) + {height}, fill='black', width=2)""", file_path)
         tk_writer.write("\n\n", file_path)
     else:
-        tk_writer.write(f"""{widget}.create_line({x}, {y}, {x + width}, {y + height}, fill='black', width=2)""", file_path)
+        tk_writer.write(f"""{widget.replace(":", "_")}.create_line({x}, {y}, {x + width}, {y + height}, fill='black', width=2)""", file_path)
         tk_writer.write("\n\n", file_path)
 
 
@@ -244,9 +244,9 @@ def create_frame(element, widget, file_id_figma, token_access):
     bg_hex = utils.rgb_to_hex(element.get("backgroundColor", {"r": 1, "g": 1, "b": 1}))
 
     tk_writer.write(f"""frame_{frame_id} = Canvas(window, width={width}, height={height}, bg='{bg_hex}', highlightthickness=0)
-{widget}.create_window({x}, {y}, anchor='nw', window=frame_{frame_id})
+{widget.replace(":", "_")}.create_window({x}, {y}, anchor='nw', window=frame_{frame_id})
 """, file_path)
-    tk_writer.write(f"{widget}.update()", file_path)
+    tk_writer.write(f"{widget.replace(":", "_")}.update()", file_path)
     tk_writer.write("\n\n", file_path)
 
     for frame_element in element["children"]:
@@ -269,7 +269,7 @@ def create_frame(element, widget, file_id_figma, token_access):
         elif frame_element["type"] == "FRAME":
             create_frame(frame_element, 'frame_' + frame_id, file_id_figma, token_access)
 
-def transform_json_to_tk(data, output_path, file_id_figma, token_access):
+def transform_to_tk(data, output_path, file_id_figma, token_access):
     global file_path
     """ This function reads JSON data from Figma and loops through each element in the frame, converting them into Canvas elements in a new Python file named TK.py"""
     page = data["document"]["children"][0]
@@ -286,7 +286,6 @@ def transform_json_to_tk(data, output_path, file_id_figma, token_access):
 
     tk_writer.write("from tkinter import *", file_path)
     tk_writer.write("\n\n", file_path)
-    tk_writer.write("\n\n", file_path)
     tk_writer.write("window = Tk()", file_path)
     tk_writer.write("\n", file_path)
     tk_writer.write(f'window.title("{page["name"]}")', file_path)
@@ -294,13 +293,11 @@ def transform_json_to_tk(data, output_path, file_id_figma, token_access):
     tk_writer.write(f'window.geometry("{frame_width}x{frame_height}")', file_path)
     tk_writer.write("\n", file_path)
     tk_writer.write(f'window.config(bg="{bg_hex}")', file_path)
-    tk_writer.write("\n", file_path)
-    tk_writer.write("\n", file_path)
+    tk_writer.write("\n\n", file_path)
     tk_writer.write(f"canvas = Canvas(window, width={frame_width}, height={frame_height}, bg='{bg_hex}', highlightthickness=0)", file_path)
     tk_writer.write("\n", file_path)
     tk_writer.write("canvas.pack(fill='both', expand=True)", file_path)
-    tk_writer.write("\n", file_path)
-    tk_writer.write("\n", file_path)
+    tk_writer.write("\n\n", file_path)
 
     for element in frame["children"]:
         """Looping through elements in the parent frame, extracting each one, and converting it into code"""

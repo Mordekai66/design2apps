@@ -3,10 +3,11 @@ import os
 import math
 import random
 import writer as kivy_writer
+import utils
 
 file_path = ""
 
-def create_text(element,frame_width, frame_height):
+def create_text(element):
     x = abs(int(element["absoluteBoundingBox"]["x"]))
     y = abs(int(element["absoluteBoundingBox"]["y"]))
     width = int(element["absoluteBoundingBox"]["width"])
@@ -16,9 +17,8 @@ def create_text(element,frame_width, frame_height):
     font_family = "Arial"
     text_color = element["fills"][0]["color"]
 
-
     kivy_writer.write(f"""
-        label = Label(
+        label_{element['id'].replace(":", "_")} = Label(
         text = '{text_content}',
         font_name = '{font_family}',
         font_size = {font_size},
@@ -27,11 +27,10 @@ def create_text(element,frame_width, frame_height):
         pos = ({x}, Window.size[1]-({y+height})),
         )
 
-        layout.add_widget(label)""", file_path)
+        layout.add_widget(label_{element['id'].replace(":", "_")})""", file_path)
     kivy_writer.write("\n\n", file_path)
 
-
-def create_button(element,frame_width, frame_height):
+def create_button(element):
     x = abs(int(element["absoluteBoundingBox"]["x"]))
     y = abs(int(element["absoluteBoundingBox"]["y"]))
     width = int(element["absoluteBoundingBox"]["width"])
@@ -54,20 +53,19 @@ def create_button(element,frame_width, frame_height):
         shape_color = button_shape["fills"][0].get("color", {"r": 1, "g": 1, "b": 1})
 
     if button_shape["type"] == "RECTANGLE":
-                        
         kivy_writer.write(f"""
-        btn = Button(
+        btn_{element['id'].replace(":", "_")} = Button(
         text='{button_text}',
         size_hint=(None, None),
         size = ({width}, {height}),
         pos = ({x}, Window.size[1]-({y+height})),
         )
-        layout.add_widget(btn)""", file_path)
+        layout.add_widget(btn_{element['id'].replace(":", "_")})""", file_path)
         kivy_writer.write("\n", file_path)
         kivy_writer.write("\n", file_path)
 
 
-def create_entry(element,frame_width, frame_height):
+def create_entry(element):
     x = abs(int(element["absoluteBoundingBox"]["x"]))
     y = abs(int(element["absoluteBoundingBox"]["y"]))
     width = int(element["absoluteBoundingBox"]["width"])
@@ -75,7 +73,7 @@ def create_entry(element,frame_width, frame_height):
     text_color = element["fills"][0]["color"]
 
     kivy_writer.write(f"""
-        entry = TextInput(
+        entry_{element['id'].replace(":", "_")} = TextInput(
         hint_text="Enter text here",
         size_hint=(None, None),
         size = ({width}, {height}),
@@ -83,12 +81,11 @@ def create_entry(element,frame_width, frame_height):
         background_color={text_color['r'], text_color['g'],text_color['b'],1},
         font_size=14)
 
-        layout.add_widget(entry)
+        layout.add_widget(entry_{element['id'].replace(":", "_")})
 """, file_path)
     kivy_writer.write("\n\n", file_path)
 
-
-def create_image(element,frame_width, frame_height, output_path, file_id_figma, token_access):
+def create_image(element, output_path, file_id_figma, token_access):
     x = abs(int(element["absoluteBoundingBox"]["x"]))
     y = abs(int(element["absoluteBoundingBox"]["y"]))
     width = int(element["absoluteBoundingBox"]["width"])
@@ -115,14 +112,16 @@ def create_image(element,frame_width, frame_height, output_path, file_id_figma, 
     with open(image_path, "wb") as s:
         s.write(img_data)
 
+    kivy_writer.write("\n", file_path)
+    kivy_writer.write("image_refs = []", file_path)
     kivy_writer.write(f"""
-        img = Image(
+        img_{element['id'].replace(":", "_")} = Image(
         source=r'{image_path}',
         size_hint=(None, None),
         size = ({width}, {height}),
         pos = ({x}, Window.size[1]-({y+height})))
 
-        layout.add_widget(img)
+        layout.add_widget(img_{element['id'].replace(":", "_")})
 """, file_path)
     kivy_writer.write("\n\n", file_path)
 
@@ -158,22 +157,17 @@ def create_ellipse(element):
     """, file_path)
     kivy_writer.write("\n\n", file_path)
 
-
-
-def transform_json_to_kivy(data, output_path, file_id_figma, token_access):
+def transform_to_kivy(data, output_dir, file_id_figma, token_access):
     global file_path
-    file_path = os.path.join(output_path+"\\"+"build"+"\\"+"kivy_code.py")
-    
+    file_path = os.path.join(output_dir + "\\build" + "\\kivy_app.py")
+
     if os.path.exists(file_path):
         os.remove(file_path)
     
-    document = data["document"]
-    page = document["children"][0]
+    page = data["document"]["children"][0]
     frame = page["children"][0]
     frame_width = int(frame["absoluteRenderBounds"]["width"])
     frame_height = int(frame["absoluteRenderBounds"]["height"])
-
-
 
     kivy_writer.write(f"""from kivy.config import Config
 Config.set('graphics', 'width', '{int(frame_width - (frame_width*0.20))}')
@@ -193,53 +187,33 @@ from kivy.uix.textinput import TextInput
     kivy_writer.write("\n", file_path)
     kivy_writer.write("\n", file_path)
     kivy_writer.write("\n", file_path)
-
-
-
-    kivy_writer.write("image_ref = []", file_path)
-    kivy_writer.write("\n", file_path)
-    kivy_writer.write("\n", file_path)
-
     bg_color = frame.get("backgroundColor", {"r": 1, "g": 1, "b": 1})
     kivy_writer.write(
         f'Window.clearcolor = ({bg_color["r"]}, {bg_color["g"]}, {bg_color["b"]})', file_path)
     kivy_writer.write("\n", file_path)
     kivy_writer.write("\n", file_path)
     print(f"bg_color done: {bg_color}")
-
-
     kivy_writer.write("""class Kivy_app(App):
     def build(self):""", file_path)
     kivy_writer.write("\n\n", file_path)
-    print("class created")
-
-
     kivy_writer.write("        layout = FloatLayout()", file_path)
     kivy_writer.write("\n\n", file_path)
 
     for element in frame["children"]:
-        print(f'{element["name"]}, {element["type"]} was created in Kivy')
-
         if element["type"] == "TEXT" or element["name"].lower() == "text":
-            create_text(element,frame_width,frame_height)
-
+            create_text(element)
         elif element["name"].lower() == "button":
-            create_button(element,frame_width,frame_height)
-
+            create_button(element)
         elif element["name"].lower() == "entry":
-            create_entry(element,frame_width,frame_height)
-
-
+            create_entry(element)
         elif element["name"].lower() == "image":
-            create_image(element,frame_width, frame_height, output_path, file_id_figma, token_access)
-
+            create_image(element, output_dir, file_id_figma, token_access)
         elif element["type"] == "RECTANGLE":
             create_rectangle(element)
-                
-
         elif element["type"] == "ELLIPSE":
             create_ellipse(element)
             
+        print(f'{element["name"]}, {element["type"]} was created in Kivy')
     kivy_writer.write("""
         return layout""", file_path)
     kivy_writer.write("\n\n", file_path)

@@ -1,2 +1,5 @@
 __pycache__/
 pyc*
+src/__pycache__/
+src/pyc*
+src/app designer.py

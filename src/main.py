@@ -5,47 +5,47 @@ import json
 import os
 import threading
 from figma_parser import parse
-from tk_transformer import transform_json_to_tk
-from kivy_transformer import transform_json_to_kivy
-from pyqt5_transformer import transform_json_to_pyqt5
-from swing_transformer import transform_json_to_swing
-from cpp_transformer import transform_json_to_cpp
+from tk_transformer import transform_to_tk
+from kivy_transformer import transform_to_kivy
+from pyqt5_transformer import transform_to_pyqt5
+from swing_transformer import transform_to_swing
+from cpp_transformer import transform_to_cpp
 
-current_mode = "figma"  # "figma" or "json"
+active_mode = "figma"  # "figma" or "json"
 
-def toggle_mode():
-    global current_mode
-    if current_mode == "figma":
-        current_mode = "json"
+def on_toggle_mode():
+    global active_mode
+    if active_mode == "figma":
+        active_mode = "json"
         mode_label.config(text="Current Mode: Upload JSON File")
         # Hide Figma inputs
         file_id_label.place_forget()
-        entry_1.place_forget()
+        file_id_entry.place_forget()
         token_label.place_forget()
-        entry_2.place_forget()
+        token_entry.place_forget()
         # Show JSON upload
         json_label.place(x=42, y=114)
         json_entry.place(x=45, y=151, width=304, height=30)
         json_browse_btn.place(x=370, y=151, width=30, height=30)
     else:
-        current_mode = "figma"
+        active_mode = "figma"
         mode_label.config(text="Current Mode: Figma API")
         # Show Figma inputs
         file_id_label.place(x=42, y=114)
-        entry_1.place(x=45, y=151, width=304, height=30)
+        file_id_entry.place(x=45, y=151, width=304, height=30)
         token_label.place(x=42, y=213)
-        entry_2.place(x=45, y=250, width=355, height=30)
+        token_entry.place(x=45, y=250, width=355, height=30)
         # Hide JSON upload
         json_label.place_forget()
         json_entry.place_forget()
         json_browse_btn.place_forget()
 
-def select_output_folder():
+def on_browse_output():
     folder_path = filedialog.askdirectory()
     output_entry.delete(0, END)
     output_entry.insert(0, folder_path)
 
-def select_json_file():
+def on_browse_json():
     file_path = filedialog.askopenfilename(
         title="Select JSON File",
         filetypes=[("JSON files", "*.json"), ("All files", "*.*")]
@@ -54,14 +54,14 @@ def select_json_file():
         json_entry.delete(0, END)
         json_entry.insert(0, file_path)
 
-def run_with_message(func, *args, message="Done!"):
+def run_transformer(func, *args, message="Done!"):
     try:
         func(*args)
         messagebox.showinfo("Success", message)
     except Exception as e:
         messagebox.showerror("Error", f"Error: {str(e)}")
 
-def submit_data():
+def on_submit():
     global current_mode
     
     output_dir = output_entry.get().strip()
@@ -69,18 +69,18 @@ def submit_data():
     if output_dir.startswith(("\"", "'")) and output_dir.endswith(("\"", "'")):
         output_dir = output_dir[1:-1]
 
-    if not validate_output_path(output_dir):
+    if not validate_output_dir(output_dir):
         return
 
-    if current_mode == "figma":
+    if active_mode == "figma":
         # Figma API mode
-        token_access = entry_2.get().strip()
-        file_id = entry_1.get().strip()
+        token_access = token_entry.get().strip()
+        file_id = file_id_entry.get().strip()
 
-        if not validate_figma_inputs(token_access, file_id):
+        if not validate_figma_fields(token_access, file_id):
             return
 
-        if not check_figma_access(token_access, file_id):
+        if not validate_figma_token(token_access, file_id):
             return
 
         try:
@@ -116,16 +116,16 @@ def submit_data():
             return
 
     # Generate all UI files
-    file_id_figma = entry_1.get().strip() if current_mode == "figma" else "local_json"
-    token_access = entry_2.get().strip() if current_mode == "figma" else "local_json"
+    file_id_figma = entry_1.get().strip() if active_mode == "figma" else "local_json"
+    token_access = entry_2.get().strip() if active_mode == "figma" else "local_json"
 
-    threading.Thread(target=run_with_message, args=(transform_json_to_tk, data, output_dir, file_id_figma, token_access), kwargs={"message": "Tk file created successfully!"}).start()
-    threading.Thread(target=run_with_message, args=(transform_json_to_kivy, data, output_dir, file_id_figma, token_access), kwargs={"message": "Kivy file created successfully!"}).start()
-    threading.Thread(target=run_with_message, args=(transform_json_to_pyqt5, data, output_dir, file_id_figma, token_access), kwargs={"message": "PyQt5 file created successfully!"}).start()
-    threading.Thread(target=run_with_message, args=(transform_json_to_swing, data, output_dir, file_id_figma, token_access), kwargs={"message": "Swing file created successfully!"}).start()
-    threading.Thread(target=run_with_message, args=(transform_json_to_cpp, data, output_dir, file_id_figma, token_access), kwargs={"message": "C++ file created successfully!"}).start()
+    threading.Thread(target=run_transformer, args=(transform_to_tk, data, output_dir, file_id_figma, token_access), kwargs={"message": "Tk file created successfully!"}).start()
+    threading.Thread(target=run_transformer, args=(transform_to_kivy, data, output_dir, file_id_figma, token_access), kwargs={"message": "Kivy file created successfully!"}).start()
+    threading.Thread(target=run_transformer, args=(transform_to_pyqt5, data, output_dir, file_id_figma, token_access), kwargs={"message": "PyQt5 file created successfully!"}).start()
+    threading.Thread(target=run_transformer, args=(transform_to_swing, data, output_dir, file_id_figma, token_access), kwargs={"message": "Swing file created successfully!"}).start()
+    threading.Thread(target=run_transformer, args=(transform_to_cpp, data, output_dir, file_id_figma, token_access), kwargs={"message": "C++ file created successfully!"}).start()
 
-def validate_output_path(output_path):
+def validate_output_dir(output_path):
     if not output_path:
         messagebox.showerror("Error", "Output path is empty")
         return False
@@ -137,7 +137,7 @@ def validate_output_path(output_path):
         return False
     return True
 
-def validate_figma_inputs(token, fileID):
+def validate_figma_fields(token, fileID):
     if not fileID:
         messagebox.showerror("Error", "File ID is empty")
         return False
@@ -146,7 +146,7 @@ def validate_figma_inputs(token, fileID):
         return False
     return True
 
-def check_figma_access(token, file_id):
+def validate_figma_token(token, file_id):
     url = f"https://api.figma.com/v1/files/{file_id}"
     headers = {"X-Figma-Token": token}
 
@@ -190,7 +190,7 @@ canvas.create_text(281, 30, anchor="center", text="Tk Designer", fill="#fffffe",
 canvas.create_text(42, 70, anchor="w", text="Data Source:", fill="#ffffff", font=("Inter", 14))
 
 # Mode toggle button
-toggle_btn = Button(app, text="Switch to JSON Upload", bg='#ff8906', fg="black", font=("Arial", 10), command=toggle_mode, relief="flat")
+toggle_btn = Button(app, text="Switch to JSON Upload", bg='#ff8906', fg="black", font=("Arial", 10), command=on_toggle_mode, relief="flat")
 canvas.create_window(200, 70, anchor="w", window=toggle_btn)
 
 mode_label = Label(app, text="Current Mode: Figma API", bg="#0f0e17", fg="#ffffff", font=("Inter", 10))
@@ -199,20 +199,20 @@ canvas.create_window(400, 70, anchor="w", window=mode_label)
 file_id_label = Label(app, text="Enter your file id", bg="#0f0e17", fg="#ffffff", font=("Inter", 14))
 file_id_label.place(x=42, y=114)
 
-entry_1 = Entry(app, bg='#ff8906', fg="black", font=("Arial", 10))
-entry_1.place(x=45, y=151, width=304, height=30)
+file_id_entry = Entry(app, bg='#ff8906', fg="black", font=("Arial", 10))
+file_id_entry.place(x=45, y=151, width=304, height=30)
 
 token_label = Label(app, text="Enter your token access", bg="#0f0e17", fg="#ffffff", font=("Inter", 14))
 token_label.place(x=42, y=213)
 
-entry_2 = Entry(app, bg='#ff8906', fg="black", font=("Arial", 10))
-entry_2.place(x=45, y=250, width=355, height=30)
+token_entry = Entry(app, bg='#ff8906', fg="black", font=("Arial", 10))
+token_entry.place(x=45, y=250, width=355, height=30)
 
 json_label = Label(app, text="Select JSON File", bg="#0f0e17", fg="#ffffff", font=("Inter", 14))
 
 json_entry = Entry(app, bg='#ff8906', fg="black", font=("Arial", 10))
 json_browse_btn = Button(app, text="📁", bg='#875d5d', fg="black", 
-                        font=("Arial", 10), command=select_json_file, relief="flat")
+                        font=("Arial", 10), command=on_browse_json, relief="flat")
 
 output_label = Label(app, text="Choose the output file path", bg="#0f0e17", fg="#ffffff", font=("Inter", 14))
 output_label.place(x=42, y=312)
@@ -220,11 +220,11 @@ output_label.place(x=42, y=312)
 output_entry = Entry(app, bg='#ff8906', fg="black", font=("Arial", 10))
 output_entry.place(x=45, y=349, width=304, height=30)
 
-output_browse_btn = Button(app, text="📁", bg='#875d5d', fg="black", font=("Arial", 10), command=select_output_folder, relief="flat")
+output_browse_btn = Button(app, text="📁", bg='#875d5d', fg="black", font=("Arial", 10), command=on_browse_output, relief="flat")
 output_browse_btn.place(x=370, y=349, width=30, height=30)
 
 # Submit button
-submit_btn = Button(app, text="Submit", bg='#c34e4e', fg="black", font=("Arial", 14, "bold"), command=submit_data, relief="flat", width=15, height=2)
+submit_btn = Button(app, text="Submit", bg='#c34e4e', fg="black", font=("Arial", 14, "bold"), command=on_submit, relief="flat", width=15, height=2)
 canvas.create_window(281, 420, anchor="center", window=submit_btn)
 
 app.mainloop()

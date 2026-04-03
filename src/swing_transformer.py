@@ -5,14 +5,7 @@ import writer as swinger_writer
 import utils
 
 file_path = ""
-counters = {
-        'label': 0,
-        'button': 0,
-        'entry': 0,
-        'imgLabel': 0,
-        'panel': 0,
-        'linepanel': 0
-    }
+counters = {'label': 0, 'button': 0, 'entry': 0, 'imgLabel': 0, 'panel': 0, 'linepanel': 0}
 def get_var(name):
     counters[name] += 1
     return f'{name}{counters[name]}'
@@ -160,7 +153,7 @@ def create_line(element, parent_name, file_path):
     swinger_writer.write(f'        {parent_name}.add({var});\n', file_path)
 
 
-def transform_json_to_swing(data, output_path, file_id_figma, token_access):
+def transform_to_swing(data, output_path, file_id_figma, token_access):
     global file_path
     page = data["document"]["children"][0]
     frame_node = page["children"][0]

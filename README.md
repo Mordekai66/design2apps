@@ -1,3 +1,8 @@
+الـ README والـ release notes هي ملفات markdown عادية — هكتبهم inline مباشرة.
+
+**README.md المحدث:**
+
+```markdown
 # design2apps — Convert Figma Designs to GUI Code
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)
@@ -7,6 +12,7 @@
 ![Kivy](https://img.shields.io/badge/Kivy-Output-1EB8F1?logo=kivy&logoColor=white)
 ![Java Swing](https://img.shields.io/badge/Java_Swing-Output-007396?logo=java&logoColor=white)
 ![C++ Qt](https://img.shields.io/badge/C%2B%2B_Qt-Output-FF6B35?logo=qt&logoColor=white)
+![Version](https://img.shields.io/badge/version-2.0.0-brightgreen)
 ![Views](https://visitor-badge.laobi.icu/badge?page_id=Mordekai66.design2apps)
 
 design2apps automatically converts Figma designs into GUI code for multiple frameworks — Tkinter, Kivy, PyQt5, Java Swing, and C++ with Qt — saving developers the time of writing repetitive UI code by hand.
@@ -21,7 +27,7 @@ Convert ready-made Figma designs into executable GUI code without manual coding,
 
 ## How It Works
 
-Figmatic supports two input modes:
+design2apps supports two input modes:
 
 **Figma API Mode**
 1. Provide your Figma file ID and personal access token
@@ -105,7 +111,7 @@ All files are saved under `{output_dir}/build/`:
 | File | Framework |
 |------|-----------|
 | `TK.py` | Tkinter |
-| `kivy_code.py` | Kivy |
+| `kivy_app.py` | Kivy |
 | `pyqt5.py` | PyQt5 |
 | `SwingUI.java` | Java Swing |
 | `cpp.cpp` | C++ with Qt |
@@ -114,19 +120,19 @@ All files are saved under `{output_dir}/build/`:
 
 ---
 
-## Project Files
+## Project Structure
 
 | File | Role |
 |------|------|
 | `main.py` | Application entry point and UI (Tkinter) |
 | `figma_parser.py` | Fetches design from Figma API or loads local JSON |
 | `tk_transformer.py` | Generates Tkinter code |
-| `tk_without_canvas_transformer.py` | Alternative Tkinter generator (no Canvas) |
 | `kivy_transformer.py` | Generates Kivy code |
 | `pyqt5_transformer.py` | Generates PyQt5 code |
 | `swing_transformer.py` | Generates Java Swing code |
 | `cpp_transformer.py` | Generates C++ with Qt code |
 | `writer.py` | Shared file-append utility used by all transformers |
+| `utils.py` | Shared color conversion utilities |
 
 ---
 
@@ -164,3 +170,4 @@ All files are saved under `{output_dir}/build/`:
 - Web-based version
 - Plugin system for community-contributed transformers
 - Batch processing for multiple designs
+```
