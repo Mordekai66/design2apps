@@ -164,5 +164,4 @@ All files are saved under `{output_dir}/build/`:
 - Additional frameworks (Flutter, React Native, C#)
 - Basic interaction/event template generation
 - Web-based version
-- Plugin system for community-contributed transformers
 - Batch processing for multiple designs
