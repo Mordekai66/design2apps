@@ -10,6 +10,7 @@ from kivy_transformer import transform_to_kivy
 from pyqt5_transformer import transform_to_pyqt5
 from swing_transformer import transform_to_swing
 from cpp_transformer import transform_to_cpp
+from preview import show_preview
 
 active_mode = "figma"  # "figma" or "json"
 
@@ -118,12 +119,14 @@ def on_submit():
     # Generate all UI files
     file_id_figma = entry_1.get().strip() if active_mode == "figma" else "local_json"
     token_access = entry_2.get().strip() if active_mode == "figma" else "local_json"
-
-    threading.Thread(target=run_transformer, args=(transform_to_tk, data, output_dir, file_id_figma, token_access), kwargs={"message": "Tk file created successfully!"}).start()
-    threading.Thread(target=run_transformer, args=(transform_to_kivy, data, output_dir, file_id_figma, token_access), kwargs={"message": "Kivy file created successfully!"}).start()
-    threading.Thread(target=run_transformer, args=(transform_to_pyqt5, data, output_dir, file_id_figma, token_access), kwargs={"message": "PyQt5 file created successfully!"}).start()
-    threading.Thread(target=run_transformer, args=(transform_to_swing, data, output_dir, file_id_figma, token_access), kwargs={"message": "Swing file created successfully!"}).start()
-    threading.Thread(target=run_transformer, args=(transform_to_cpp, data, output_dir, file_id_figma, token_access), kwargs={"message": "C++ file created successfully!"}).start()
+    
+    def do_generate():
+        threading.Thread(target=run_transformer, args=(transform_to_tk, data, output_dir, file_id_figma, token_access), kwargs={"message": "Tk file created successfully!"}).start()
+        threading.Thread(target=run_transformer, args=(transform_to_kivy, data, output_dir, file_id_figma, token_access), kwargs={"message": "Kivy file created successfully!"}).start()
+        threading.Thread(target=run_transformer, args=(transform_to_pyqt5, data, output_dir, file_id_figma, token_access), kwargs={"message": "PyQt5 file created successfully!"}).start()
+        threading.Thread(target=run_transformer, args=(transform_to_swing, data, output_dir, file_id_figma, token_access), kwargs={"message": "Swing file created successfully!"}).start()
+        threading.Thread(target=run_transformer, args=(transform_to_cpp, data, output_dir, file_id_figma, token_access), kwargs={"message": "C++ file created successfully!"}).start()
+    show_preview(data, on_confirm=do_generate)
 
 def validate_output_dir(output_path):
     if not output_path:
@@ -175,7 +178,7 @@ def validate_figma_token(token, file_id):
     return False
 
 app = Tk()
-app.title("Figma API Integration")
+app.title("design2apps")
 app.geometry("562x500")
 app.config(bg="#0f0e17")
 app.resizable(0, 0)
@@ -184,7 +187,7 @@ canvas = Canvas(app, width=562, height=500, bg='#0f0e17', highlightthickness=0)
 canvas.pack(fill='both', expand=True)
 
 # Title
-canvas.create_text(281, 30, anchor="center", text="Tk Designer", fill="#fffffe", font=("Inter", 36, "bold"))
+canvas.create_text(281, 30, anchor="center", text="design2apps", fill="#fffffe", font=("Inter", 36, "bold"))
 
 # Mode toggle section
 canvas.create_text(42, 70, anchor="w", text="Data Source:", fill="#ffffff", font=("Inter", 14))

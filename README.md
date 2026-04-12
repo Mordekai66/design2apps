@@ -45,6 +45,7 @@ In both modes, the tool extracts elements, colors, fonts, and layouts from the d
 - **Comprehensive Element Support**: text, buttons, entries, images, rectangles, ellipses, frames, lines, arrows
 - **Accurate Styling**: preserves colors, fonts, sizes, and layouts from the original design
 - **Image Export**: automatically downloads and saves images from Figma into a local `image/` directory
+- **File Tree Preview**: displays a hierarchical tree of all parsed UI elements before generation, allowing you to inspect structure, nesting, and components that will be converted into code
 - **Threaded Generation**: all five framework files are generated simultaneously
 - **Input Validation**: validates Figma token and file ID before making API calls
 
