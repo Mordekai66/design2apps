@@ -43,6 +43,7 @@ In both modes, the tool extracts elements, colors, fonts, and layouts from the d
 - **Two Input Modes**: Figma API or local JSON file upload
 - **Multi-Framework Support**: Tkinter, Kivy, PyQt5, Java Swing, C++ with Qt
 - **Comprehensive Element Support**: text, buttons, entries, images, rectangles, ellipses, frames, lines, arrows
+- **Framework selection system (Tkinter, Kivy, PyQt5, Swing, C++) with checkbox control.**
 - **Accurate Styling**: preserves colors, fonts, sizes, and layouts from the original design
 - **Image Export**: automatically downloads and saves images from Figma into a local `image/` directory
 - **File Tree Preview**: displays a hierarchical tree of all parsed UI elements before generation, allowing you to inspect structure, nesting, and components that will be converted into code
